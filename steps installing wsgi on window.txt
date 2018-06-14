@@ -1,0 +1,29 @@
+1. install VC15 on windows
+2. install python 3.6.5 x64
+3. download apache24
+4. type mod_wsgi-express module-config
+5. Copy the statements in step 4 into apache conf
+
+6.        
+	WSGIScriptAlias / /home/chenyuhang01/Desktop/web/mysite/mysite/wsgi.py
+        <Directory /home/chenyuhang01/Desktop/web/mysite/mysite/>
+                <Files wsgi.py>
+                        Require all granted
+                </Files>
+        </Directory>
+
+Notes: This is for windows need to set 
+sys.path.append('to project file path')
+in the wsgi.py
+
+Run as Windows NT server
+httpd.exe -k install -n "MyServiceName"
+
+
+if using virtual environment:
+must install virtualenv
+1. pip install virtualenv
+2. virtualenv -p python <environment name>
+
+
+if mod_wsgi does not install correctly, download mod_wsgi yourself
