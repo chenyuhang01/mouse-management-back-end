@@ -21,9 +21,13 @@ from mousemanagement.category import Object
 # For converting json object
 import json
 
+# For csv processing
 import pandas as pd
 
+# For converting csv and save into database
 from mousemanagement.csv2db import csv2db
+
+# Used for path saving directory
 from os import listdir
 from os.path import isfile, join
 import shutil
@@ -75,6 +79,8 @@ def imageFileUpload(request):
 
     temp_path = handle_uploaded_file(file, mypath + '/' + filename)
 
+
+    #If the file is not stored on th server, gives error feedback
     error = False
     if(not os.path.isfile(mypath + '/' + filename)): 
         error = True  
@@ -134,6 +140,10 @@ def fileupload(request):
 def parsecsv(file):
     csv2dbhandler = csv2db(file)
     finished = False
+
+    #Errors occurs when there is mulitple files processing and using database
+    #If Conflicts occurs, try next three seconds
+    #Keep trying parsing the csv file until it finished.
     while(not finished):
         try:
             (record_error, error) = csv2dbhandler.startparsing()
@@ -299,7 +309,7 @@ def mouseinsert(request):
     birthdate_input = json_mouse_data['birthdate']
     birthdate = datetime.strptime(birthdate_input, '%d/%m/%Y')
     birthdate = birthdate.strftime("%Y-%m-%d")
-    print(birthdate)
+
     deathdate_input = json_mouse_data['deathdate']
     deathdate = datetime.strptime(deathdate_input, '%d/%m/%Y')
     deathdate = deathdate.strftime("%Y-%m-%d")
@@ -403,6 +413,7 @@ def mouseinsert(request):
         return response
     
 
+
 def getItemFromDatabase(key, error, error_message, typeObject, typestring):
     result = ''
     try:
@@ -497,7 +508,8 @@ def category_insert(request):
         )
     return response
 
-
+#Get the number of records found in the database
+#Based on the inputs
 def getcount(type, input):
     if(type == 'genotype'):
         return Genotype.objects.filter(name=input).count()
@@ -512,7 +524,9 @@ def getcount(type, input):
     else:
         return -1
 
-
+#Giving select inputs into the database, if 
+#there is no such inputs in the database and 
+#Return the results from the database
 def makeinsertion(type, input):
     if(type == 'genotype'):
         genotype = Genotype(input)
@@ -538,6 +552,7 @@ def makeinsertion(type, input):
         return None
 
 
+#Construct the event for each of response event
 def makeEvent(name, result, error, errorCode):
     event = Object()
     event.name = name
@@ -550,6 +565,7 @@ def makeEvent(name, result, error, errorCode):
     response["Access-Control-Allow-Headers"] = "http://localhost:4200/"
     return response
 
+#Construct the event that will be sent back to server upon requesting
 def makeUploadEvent(name, result, error, errorCode, fileid):
     event = Object()
     event.name = name
