@@ -36,11 +36,13 @@ import shutil
 def getimages(request):
     
     physical_id = json.loads(request.body)['physical_id']
+    #For production, it must change to server folder
+    # "C:\\Apache24\htdocs\"
     cwd = os.getcwd()
 
     try:
         mypath = cwd + '/mousemanagement/static/photos/%s' % physical_id
-        filelists = [f for f in listdir(mypath) if isfile(join(mypath, f)) and '.jpg' in f]
+        filelists = [f for f in listdir(mypath) if isfile(join(mypath, f)) and (('.jpg' PR '.jpg') in f)]
     
     except OSError:
         response = makeEvent(
@@ -70,6 +72,8 @@ def imageFileUpload(request):
     file = request.FILES['file']
     filename = request.POST['filename']
     physical_id = request.POST['physical_id']
+    #For production, it must change to server folder
+    # "C:\\Apache24\htdocs\"
     cwd = os.getcwd()
     mypath = cwd + '/mousemanagement/static/photos/%s' % physical_id
 
