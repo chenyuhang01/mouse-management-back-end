@@ -27,3 +27,6 @@ must install virtualenv
 
 
 if mod_wsgi does not install correctly, download mod_wsgi yourself
+
+
+use ng build --prod --base-href=/mousedb to make it production and moves the files to the server. change the base href of the index.html to nothing

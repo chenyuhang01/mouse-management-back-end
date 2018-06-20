@@ -73,8 +73,11 @@ def imageFileUpload(request):
     cwd = os.getcwd()
     mypath = cwd + '/mousemanagement/static/photos/%s' % physical_id
 
-    if(not os.path.isdir(mypath)):
-        os.makedirs(mypath)
+    try:
+        if(not os.path.isdir(mypath)):
+            os.makedirs(mypath)
+    except FileExistsError:
+        print('Peacefully passed')
     
 
     temp_path = handle_uploaded_file(file, mypath + '/' + filename)
@@ -90,7 +93,7 @@ def imageFileUpload(request):
     if(error):
         response = makeUploadEvent(
             name='UploadImageEvent',
-            result=record_error,
+            result="Internal errors",
             error=error,
             errorCode=errorCode,
             fileid=fileid
